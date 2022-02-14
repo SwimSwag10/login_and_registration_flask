@@ -30,23 +30,20 @@ def index():
 def show_info():
   if 'user_id' not in session:
     return redirect('/logout')
-  data ={
+  data = {
     'id': session['user_id']
   }
   return render_template('results.html', results=User.get_by_id(data))
 
 @app.route('/login',methods=['POST'])
 def login():
-  print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
   user = User.get_one(request.form)
 
   # -------------------------------- validatting user email on login --------------------------------
-  print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   if not user:
     flash("Invalid Email","login")
     return redirect('/')
   # -------------------------------- validatting user password on login --------------------------------
-  print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
   if not bcrypt.check_password_hash(user.password, request.form['password']):
     flash("Invalid Password","login")
     return redirect('/')
