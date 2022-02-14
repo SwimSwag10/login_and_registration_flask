@@ -15,14 +15,8 @@ class User:
 
   @classmethod
   def save(cls,data):
-    query = "INSERT into users (first_name, last_name, email, password) VALUES (%(first_name)s,%(last_name)s,%(email)s,%(password)s);"
-    return connectToMySQL('login_registration_schema').query_db(query,data)
-
-  @classmethod
-  def get_one(cls, data): # this is to get one user from the database
-    query = "SELECT * FROM users WHERE id=%(id)s"
-    result = connectToMySQL('login_registration_schema').query_db(query, data) # [{name: "blah"}]
-    return cls(result[0])
+    query = "INSERT INTO users (first_name,last_name,email,password) VALUES(%(first_name)s,%(last_name)s,%(email)s,%(password)s)"
+    return connectToMySQL(cls.db).query_db(query,data)
 
   @classmethod
   def get_all(cls): # this is to get all users in the database;
@@ -32,6 +26,20 @@ class User:
     for row in result:
       emails.append(cls(row))
     return result
+
+  @classmethod
+  def get_one(cls, data):
+    query = "SELECT * FROM users WHERE email = %(email)s;"
+    results = connectToMySQL('login_registration_schema').query_db(query,data)
+    if len(results) < 1:
+      return False
+    return cls(results[0])
+
+  @classmethod
+  def get_by_id(cls,data): # why does this route EXIST!!!
+    query = "SELECT * FROM users WHERE id = %(id)s;"
+    results = connectToMySQL('login_registration_schema').query_db(query,data)
+    return cls(results[0])
 
   @staticmethod
   def validate_user( user ):

@@ -13,12 +13,14 @@
     <!-- ------------this is the account creation section------------ -->
     <form action="/register" method="post" class="col">
       <div style="color: white; background-color: crimson;">
-        {% with messages = get_flashed_messages() %} 
-          {% if messages %}       
-          <strong>Incorrect Account Creation</strong>
-            {% for message in messages %}
-              <p>{{ message }}</p>
-            {% endfor %}
+        {% with messages = get_flashed_messages(with_categories=True) %}
+          {% if messages %}
+          <div class="alert alert-danger" role="alert">
+            <strong>Incorrect Account Registration</strong>
+              {% for message in messages %}
+              <p>{{message}}</p>
+              {% endfor %}
+          </div>
           {% endif %}
         {% endwith %}
       </div>

@@ -33,7 +33,7 @@ def show_info():
   data ={
     'id': session['user_id']
   }
-  return render_template('results.html', results=User.get_one(data))
+  return render_template('results.html', results=User.get_by_id(data))
 
 @app.route('/login',methods=['POST'])
 def login():
