@@ -9,13 +9,19 @@
   <title>Dojo Results</title>
 </head>
 <body>
-  <div id="container">
-    <h1>Your Info:</h1>
+  <div class="col">
+    <h1 class="">Welcome, {{ results.first_name }}:</h1>
     <hr class="mb-4">
-    <p>Email:</p>
-    {% for user in results %}
-      <p class="">{{ user.email }}</p>
-    {% endfor %}
+    <h2>First Name:</h2>
+    <p class="">{{ results.first_name }}</p>
+    <h2>Last Name:</h2>
+    <p class="">{{ results.last_name }}</p>
+    <h2>Email:</h2>
+    <p class="">{{ results.email }}</p>
+    <h2>Password:</h2>
+    <p class="">{{ results.password }}</p>
+    <a href="/logout"><p class="btn btn-primary">Log Out</p></a>
+    <a href="/"><p class="btn btn-primary">Home</p></a>
   </div>
 </body>
 </html>

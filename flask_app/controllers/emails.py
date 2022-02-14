@@ -1,17 +1,26 @@
-from flask import render_template,request, redirect, flash
+from flask import render_template,request, redirect, flash, session
 from flask_app import app
 from flask_app.models.email import User
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(app)
 
-@app.route('/create/email', methods=['POST'])
+# CREATE
+
+@app.route('/register', methods=['POST'])
 def create():
   if not User.validate_user(request.form):
-    flash("Email cannot be blank!", 'email')
     return redirect('/')
-  data = {
-    "email" : request.form['email'],
+  data ={ 
+    "first_name": request.form['first_name'],
+    "last_name": request.form['last_name'],
+    "email": request.form['email'],
+    "password": bcrypt.generate_password_hash(request.form['password'])
   }
-  User.save(data)
+  id = User.save(data)
+  session['user_id'] = id # storing the users id when creating the acocunt
   return redirect('/success')
+
+# READ
 
 @app.route('/')
 def index():
@@ -19,4 +28,37 @@ def index():
 
 @app.route('/success')
 def show_info():
-  return render_template('results.html', results=User.get_all())
+  if 'user_id' not in session:
+    return redirect('/logout')
+  data ={
+    'id': session['user_id']
+  }
+  return render_template('results.html', results=User.get_one(data))
+
+@app.route('/login',methods=['POST'])
+def login():
+  print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+  user = User.get_one(request.form)
+
+  # -------------------------------- validatting user email on login --------------------------------
+  print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  if not user:
+    flash("Invalid Email","login")
+    return redirect('/')
+  # -------------------------------- validatting user password on login --------------------------------
+  print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+  if not bcrypt.check_password_hash(user.password, request.form['password']):
+    flash("Invalid Password","login")
+    return redirect('/')
+
+  session['user_id'] = user.id # I'm not sure why this needs to be here
+  return redirect('/success')
+
+# UPDATE
+
+# DELETE
+
+@app.route('/logout')
+def logout():
+  session.clear()
+  return redirect('/')

@@ -11,14 +11,17 @@
 <body class="container">
   <div class="row">
     <!-- ------------this is the account creation section------------ -->
-    <form action="/create/email" method="post" class="col">
-      {% with messages = get_flashed_messages() %} 
-        {% if messages %}       
-          {% for message in messages %}   
-            <p>{{ message }}</p>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+    <form action="/register" method="post" class="col">
+      <div style="color: white; background-color: crimson;">
+        {% with messages = get_flashed_messages() %} 
+          {% if messages %}       
+          <strong>Incorrect Account Creation</strong>
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
       <h1>Sign Up</h1>
       <hr class="mb-4">
       <p>First Name:</p>
@@ -28,18 +31,22 @@
       <p>Email:</p>
       <input type="text" name="email">
       <p>Password:</p>
-      <input type="text" name="password">
+      <input type="password" name="password">
       <p>Confirm Password:</p>
-      <input type="text" name="password_confirm">
+      <input type="password" name="password_confirm">
       <input type="submit" name="Submit" class="btn btn-primary">
     </form>
+
     <!-- ------------this is the login section------------ -->
-    <form action="/create/email" method="post" class="col">
-      {% with messages = get_flashed_messages() %} 
-        {% if messages %}       
-          {% for message in messages %}   
-            <p>{{ message }}</p>
-          {% endfor %}
+    <form action="/login" method="post" class="col">
+      {% with messages = get_flashed_messages(category_filter=['login']) %}
+        {% if messages %}
+        <div class="alert alert-danger" role="alert">
+          <strong>Incorrect Login Attempt</strong>
+            {% for message in messages %}
+            <p>{{message}}</p>
+            {% endfor %}
+        </div>
         {% endif %}
       {% endwith %}
       <h1>Login</h1>
@@ -47,9 +54,10 @@
       <p>Email:</p>
       <input type="text" name="email">
       <p>Password:</p>
-      <input type="text" name="password">
-      <input type="submit" name="Submit" class="btn btn-primary">
+      <input type="password" name="password">
+      <input type="submit" value="Login" class="btn btn-primary">
     </form>
+
   </div>
 </body>
 </html>
